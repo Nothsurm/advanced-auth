@@ -6,6 +6,7 @@ import './index.css'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path='/login' element={<Login />}></Route>
           <Route path='/home' element={<Home />}></Route>
           <Route path='/forgotPassword' element={<ForgotPassword />}></Route>
+          <Route path='/resetPassword/:token' element={<ResetPassword />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

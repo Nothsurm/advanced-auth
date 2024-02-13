@@ -1,25 +1,27 @@
 import Axios from "axios"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { toast } from 'react-toastify'
 import { useNavigate } from "react-router-dom"
 
-export default function ForgotPassword() {
-    const [email, setEmail] = useState('')
+export default function ResetPassword() {
+    const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+    const {token} = useParams()
 
     const navigate = useNavigate()
 
     const submitHandler = async (e) => {
         e.preventDefault()
         setLoading(true)
-        Axios.post('http://localhost:5000/auth/forgotPassword', {
-            email
+        Axios.post('http://localhost:5000/auth/resetPassword/'+token, {
+            password
         }).then(response => {
             if (response.status) {
-                toast.success('Check your email for reset password link')
+                toast.success('Password has been reset')
                 setLoading(false)
                 navigate('/login')
+                console.log(response.data)
             } else {
                 toast.error(response.message)
                 setLoading(false)
@@ -34,25 +36,25 @@ export default function ForgotPassword() {
   return (
     <div className="flex justify-center mt-10">
     <div className="flex flex-col gap-6">
-        <h1 className="font-bold text-xl">Forgot Password</h1>
+        <h1 className="font-bold text-xl">Reset Password</h1>
         <form onSubmit={submitHandler}>
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col">
                 <label htmlFor='email'>
-                    Email:
+                    New Password:
                 </label>
                 <input 
-                    type="email" 
-                    id='email'
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="password" 
+                    id='password'
+                    placeholder="******"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="border rounded-lg p-2"
                 />
                 </div>
             </div>
             <button disabled={loading} type='submit' className="mt-5 bg-zinc-800 text-white p-2 rounded disabled:opacity-70">
-                {loading ? 'Sending...' : 'Send'}
+                {loading ? 'Resetting...' : 'Reset'}
             </button>
         </form>
         <div className="mt-4">

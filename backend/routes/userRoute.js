@@ -53,7 +53,7 @@ router.post('/forgotPassword', async (req, res) => {
             return res.json({ message: 'User hasnt been registered' })
         }
 
-        const token = jwt.sign({username: user.username}, process.env.VITE_TOKEN, {expiresIn: '5m'})
+        const token = jwt.sign({id: user._id}, process.env.VITE_TOKEN, {expiresIn: '10m'})
 
         var transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -67,7 +67,7 @@ router.post('/forgotPassword', async (req, res) => {
             from: 'mrush94ton@gmail.com',
             to: email,
             subject: 'Reset Password',
-            text: `http://localhost:5000/resetPassword/${token}`
+            text: `http://localhost:5173/resetPassword/${token}`
           };
           
         transporter.sendMail(mailOptions, function(error, info){
@@ -79,6 +79,24 @@ router.post('/forgotPassword', async (req, res) => {
         });
     } catch (error) {
         console.log(err)
+    }
+});
+
+router.post('/resetPassword/:token', async (req, res) => {
+    const {token} = req.params;
+    const {password} = req.body
+
+    try {
+        const decoded = await jwt.verify(token, process.env.VITE_TOKEN)
+        const id = decoded.id;
+        console.log(id);
+        console.log(decoded);
+        const hashedPassword = await bcrypt.hash(password, 10)
+        await User.findByIdAndUpdate({_id: id}, {password: hashedPassword})
+        return res.json({ status: true, message: "Updated Password Successfully"})
+
+    } catch (err) {
+        return res.json('Invalid token')
     }
 })
 
