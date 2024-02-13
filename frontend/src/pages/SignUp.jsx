@@ -1,6 +1,7 @@
 import Axios from "axios"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Link } from "react-router-dom"
+import { toast } from 'react-toastify'
 
 export default function SignUp() {
     const [username, setUsername] = useState('')
@@ -11,13 +12,21 @@ export default function SignUp() {
 
     const submitHandler = async (e) => {
         e.preventDefault()
+        setLoading(true)
+        if (password !== confirmPassword) {
+
+        }
         Axios.post('http://localhost:5000/auth/signup', {
             username, 
             email, 
             password
         }).then(response => {
+            toast.success('Registration Successfull')
+            setLoading(false)
             console.log(response)
         }).catch(err => {
+            toast.error(err.message)
+            setLoading(false)
             console.log(err)
         })
     }
