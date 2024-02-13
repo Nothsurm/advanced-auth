@@ -98,6 +98,23 @@ router.post('/resetPassword/:token', async (req, res) => {
     } catch (err) {
         return res.json('Invalid token')
     }
+});
+
+const verifyUser = async (req, res, next) => {
+    try {
+        const token = req.cookies.token
+        if (!token) {
+            return res.json({ status: false, message: 'not authorized'})
+        }
+        const decoded = await jwt.verify(token, process.env.VITE_TOKEN)
+        next()
+    } catch (err) {
+        return res.json(err)
+    }
+}
+
+router.get('/verify', verifyUser, (req, res) => {
+    return res.json({ status: true, message: 'authorized'})
 })
 
 export {router as UserRouter}
