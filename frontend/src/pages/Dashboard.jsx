@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
     const navigate = useNavigate()
@@ -10,9 +11,9 @@ export default function Dashboard() {
         axios.get('http://localhost:5000/auth/verify')
         .then(res => {
             if (res.data.status) {
-
             } else {
-                navigate('/')
+                toast.error('Not authorized')
+                navigate('/login')
             }
         })
     }, [])
