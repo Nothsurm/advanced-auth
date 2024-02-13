@@ -6,26 +6,22 @@ import { useNavigate } from "react-router-dom"
 
 export default function Login() {
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
-    Axios.defaults.withCredentials = true
-
     const submitHandler = async (e) => {
         e.preventDefault()
         setLoading(true)
-        Axios.post('http://localhost:5000/auth/login', {
-            email, 
-            password
+        Axios.post('http://localhost:5000/auth/forgotPassword', {
+            email
         }).then(response => {
-            if (response.data.status) {
-                toast.success('Login Successfull')
+            if (response.status) {
+                toast.success('Check your email for reset password link')
                 setLoading(false)
-                navigate('/home')
+                navigate('/login')
             } else {
-                toast.error(response.data.message)
+                toast.error(response.message)
                 setLoading(false)
             }
             //console.log(response)
@@ -38,7 +34,7 @@ export default function Login() {
   return (
     <div className="flex justify-center mt-10">
     <div className="flex flex-col gap-6">
-        <h1 className="font-bold text-xl">Login</h1>
+        <h1 className="font-bold text-xl">Forgot Password</h1>
         <form onSubmit={submitHandler}>
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col">
@@ -54,22 +50,9 @@ export default function Login() {
                     className="border rounded-lg p-2"
                 />
                 </div>
-                <div className="flex flex-col">
-                <label htmlFor='password'>
-                    Password:
-                </label>
-                <input 
-                    type="password" 
-                    id='password'
-                    placeholder="******"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border rounded-lg p-2"
-                />
-                </div>
             </div>
             <button disabled={loading} type='submit' className="mt-5 bg-zinc-800 text-white p-2 rounded disabled:opacity-70">
-                {loading ? 'Signing In...' : 'Sign In'}
+                {loading ? 'Sending...' : 'Send'}
             </button>
         </form>
         <div className="mt-4">
@@ -77,9 +60,6 @@ export default function Login() {
             <Link to={'/signup'} className="hover:underline text-teal-500">
                 Register
             </Link>
-        </div>
-        <div className="">
-              <Link to='/forgotPassword' className="hover:underline text-blue-500">Forgot Password?</Link>
         </div>
     </div>
 </div>
