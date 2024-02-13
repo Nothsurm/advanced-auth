@@ -4,30 +4,26 @@ import { Link } from "react-router-dom"
 import { toast } from 'react-toastify'
 import { useNavigate } from "react-router-dom"
 
-export default function SignUp() {
-    const [username, setUsername] = useState('')
+export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
+    Axios.defaults.withCredentials = true
+
     const submitHandler = async (e) => {
         e.preventDefault()
         setLoading(true)
-        if (password !== confirmPassword) {
-
-        }
-        Axios.post('http://localhost:5000/auth/signup', {
-            username, 
+        Axios.post('http://localhost:5000/auth/login', {
             email, 
             password
         }).then(response => {
             if (response.data.status) {
-                toast.success('Registration Successfull')
+                toast.success('Login Successfull')
                 setLoading(false)
-                navigate('/login')
+                navigate('/home')
             } else {
                 toast.error(response.data.message)
                 setLoading(false)
@@ -42,22 +38,9 @@ export default function SignUp() {
   return (
     <div className="flex justify-center mt-10">
     <div className="flex flex-col gap-6">
-        <h1 className="font-bold text-xl">Register</h1>
+        <h1 className="font-bold text-xl">Login</h1>
         <form onSubmit={submitHandler}>
             <div className="flex flex-col gap-5">
-                <div className="flex flex-col">
-                <label htmlFor='name'>
-                    Name:
-                </label>
-                <input 
-                    type="text" 
-                    id='name'
-                    placeholder="Enter name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="border rounded-lg p-2"
-                />
-                </div>
                 <div className="flex flex-col">
                 <label htmlFor='email'>
                     Email:
@@ -84,28 +67,15 @@ export default function SignUp() {
                     className="border rounded-lg p-2"
                 />
                 </div>
-                <div className="flex flex-col">
-                <label htmlFor='confirm-password'>
-                    Confirm Password:
-                </label>
-                <input 
-                    type="password" 
-                    id='confirm-password'
-                    placeholder="******"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="border rounded-lg p-2"
-                />
-                </div>
             </div>
             <button disabled={loading} type='submit' className="mt-5 bg-zinc-800 text-white p-2 rounded disabled:opacity-70">
-                {loading ? 'Registering...' : 'Register'}
+                {loading ? 'Signing In...' : 'Sign In'}
             </button>
         </form>
         <div className="mt-4">
-            Already have an account? {" "}
-            <Link to={'/login'} className="hover:underline text-teal-500">
-                Login
+            Don't have an account? {" "}
+            <Link to={'/signup'} className="hover:underline text-teal-500">
+                Register
             </Link>
         </div>
     </div>
